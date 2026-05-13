@@ -26,7 +26,7 @@ export function SettingsScreen() {
   const [showLogoExport, setShowLogoExport] = useState(false);
   const [theme, setTheme] = useState<"system" | "light" | "dark">(() => {
     const saved = localStorage.getItem("theme") as "system" | "light" | "dark";
-    return saved || "dark";
+    return saved || "light";
   });
 
   useEffect(() => {

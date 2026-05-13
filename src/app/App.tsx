@@ -22,6 +22,27 @@ export default function App() {
   const [showOTP, setShowOTP] = useState(false);
   const [userEmail, setUserEmail] = useState("");
 
+  // Initialize theme on app load
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") as "system" | "light" | "dark" | null;
+    const theme = savedTheme || "light";
+
+    const root = document.documentElement;
+
+    if (theme === "system") {
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      if (prefersDark) {
+        root.classList.add("dark");
+      } else {
+        root.classList.remove("dark");
+      }
+    } else if (theme === "dark") {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
+  }, []);
+
   const handleOnboardingComplete = () => {
     localStorage.setItem("hasSeenOnboarding", "true");
     setShowOnboarding(false);
