@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { BottomNav } from "./components/BottomNav";
-import { TimelineScreen } from "./screens/TimelineScreen";
+import { DashboardScreen } from "./screens/DashboardScreen";
 import { RecordScreen } from "./screens/RecordScreen";
 import { LiveScreen } from "./screens/LiveScreen";
 import { HistoryScreen } from "./screens/HistoryScreen";
@@ -10,7 +10,7 @@ import { LoginScreen } from "./screens/LoginScreen";
 import { OTPScreen } from "./screens/OTPScreen";
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState("timeline");
+  const [activeTab, setActiveTab] = useState("dashboard");
   const [showOnboarding, setShowOnboarding] = useState(() => {
     const hasSeenOnboarding = localStorage.getItem("hasSeenOnboarding");
     return !hasSeenOnboarding;
@@ -71,8 +71,8 @@ export default function App() {
 
   const renderScreen = () => {
     switch (activeTab) {
-      case "timeline":
-        return <TimelineScreen />;
+      case "dashboard":
+        return <DashboardScreen />;
       case "record":
         return <RecordScreen />;
       case "live":
@@ -82,7 +82,7 @@ export default function App() {
       case "settings":
         return <SettingsScreen />;
       default:
-        return <TimelineScreen />;
+        return <DashboardScreen />;
     }
   };
 

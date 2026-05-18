@@ -1,58 +1,36 @@
+import { useState } from "react";
+import { motion } from "motion/react";
 import {
+  User,
   Car,
-  Plus,
-  Crown,
-  TrendingUp,
-  MapPin,
-  Clock,
-  Wifi,
-  ChevronRight,
-  LogOut,
   Bell,
+  Moon,
+  Sun,
+  Monitor,
+  Bluetooth,
+  Info,
+  HelpCircle,
+  LogOut,
+  ChevronRight,
   Shield,
   Globe,
-  User,
-  Monitor,
-  Sun,
-  Moon,
-  Check,
-  Image,
+  Smartphone,
 } from "lucide-react";
-import { useState, useEffect } from "react";
-import { LogoExportScreen } from "./LogoExportScreen";
 
 export function SettingsScreen() {
-  const [showThemeMenu, setShowThemeMenu] = useState(false);
-  const [showLogoExport, setShowLogoExport] = useState(false);
-  const [theme, setTheme] = useState<"system" | "light" | "dark">(() => {
-    const saved = localStorage.getItem("theme") as "system" | "light" | "dark";
-    return saved || "light";
-  });
+  const [theme, setTheme] = useState<"light" | "dark" | "system">("light");
+  const [notifications, setNotifications] = useState(true);
 
-  useEffect(() => {
-    const root = document.documentElement;
-
-    if (theme === "system") {
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      if (prefersDark) {
-        root.classList.add("dark");
-      } else {
-        root.classList.remove("dark");
-      }
-    } else if (theme === "dark") {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
-  }, []);
-
-  const handleThemeChange = (newTheme: "system" | "light" | "dark") => {
+  const handleThemeChange = (newTheme: "light" | "dark" | "system") => {
     setTheme(newTheme);
     localStorage.setItem("theme", newTheme);
+
     const root = document.documentElement;
 
     if (newTheme === "system") {
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const prefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches;
       if (prefersDark) {
         root.classList.add("dark");
       } else {
@@ -63,284 +41,245 @@ export function SettingsScreen() {
     } else {
       root.classList.remove("dark");
     }
-    setShowThemeMenu(false);
   };
 
-  const cars = [
+  const settingsGroups = [
     {
-      id: 1,
-      name: "BMW M3 Competition",
-      year: "2023",
-      vin: "WBS8M9C5XJ5K12345",
-      isActive: true,
+      title: "Hesap",
+      items: [
+        {
+          icon: User,
+          label: "Profil Bilgileri",
+          description: "Adınız, e-posta ve telefon",
+          action: () => {},
+        },
+        {
+          icon: Car,
+          label: "Araç Bilgileri",
+          description: "Toyota Corolla 2020",
+          action: () => {},
+        },
+      ],
     },
     {
-      id: 2,
-      name: "Porsche 911 GT3",
-      year: "2022",
-      vin: "WP0AC2A99NS123456",
-      isActive: false,
+      title: "Cihaz",
+      items: [
+        {
+          icon: Bluetooth,
+          label: "OBD2 Bağlantısı",
+          description: "ELM327 Adaptör",
+          action: () => {},
+        },
+        {
+          icon: Smartphone,
+          label: "Cihaz Ayarları",
+          description: "Bağlantı ve senkronizasyon",
+          action: () => {},
+        },
+      ],
+    },
+    {
+      title: "Tercihler",
+      items: [
+        {
+          icon: Bell,
+          label: "Bildirimler",
+          description: notifications ? "Açık" : "Kapalı",
+          action: () => setNotifications(!notifications),
+          toggle: true,
+          toggleValue: notifications,
+        },
+        {
+          icon: Globe,
+          label: "Dil",
+          description: "Türkçe",
+          action: () => {},
+        },
+      ],
+    },
+    {
+      title: "Hakkında",
+      items: [
+        {
+          icon: Info,
+          label: "Uygulama Bilgisi",
+          description: "Versiyon 1.0.0",
+          action: () => {},
+        },
+        {
+          icon: HelpCircle,
+          label: "Yardım & Destek",
+          description: "SSS ve iletişim",
+          action: () => {},
+        },
+        {
+          icon: Shield,
+          label: "Gizlilik Politikası",
+          description: "Şartlar ve koşullar",
+          action: () => {},
+        },
+      ],
     },
   ];
-
-  const stats = [
-    { label: "Total Drives", value: "24", icon: TrendingUp },
-    { label: "Total Distance", value: "1,248 km", icon: MapPin },
-    { label: "Total Time", value: "18h 42m", icon: Clock },
-  ];
-
-  const getThemeIcon = () => {
-    if (theme === "system") return Monitor;
-    if (theme === "light") return Sun;
-    return Moon;
-  };
-
-  const getThemeLabel = () => {
-    if (theme === "system") return "Same as system";
-    if (theme === "light") return "Light";
-    return "Dark";
-  };
-
-  const ThemeIcon = getThemeIcon();
-
-  if (showLogoExport) {
-    return <LogoExportScreen onBack={() => setShowLogoExport(false)} />;
-  }
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto pb-24">
-      <div className="sticky top-0 bg-background/95 backdrop-blur-lg border-b border-border z-10 p-4">
-        <div className="flex items-center justify-between mb-2">
-          <div>
-            <h1 className="mb-1">Settings</h1>
-            <p className="text-sm text-muted-foreground">Manage your account</p>
-          </div>
+    <div className="h-full overflow-y-auto pb-20 bg-background">
+      {/* Header */}
+      <div className="sticky top-0 z-10 bg-background border-b border-border">
+        <div className="p-4">
+          <h1 className="text-2xl font-bold">Ayarlar</h1>
+          <p className="text-sm text-muted-foreground">
+            Uygulama ve hesap ayarları
+          </p>
         </div>
       </div>
 
-      <div className="p-4">
-        <div className="bg-gradient-to-br from-card to-secondary rounded-3xl p-6 mb-6 border border-border">
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-red-600 via-red-500 to-rose-600 flex items-center justify-center text-white shadow-lg shadow-red-500/30">
-              <span className="text-3xl font-bold">AT</span>
+      <div className="p-4 space-y-6">
+        {/* User Profile Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-gradient-to-br from-primary to-accent-red rounded-2xl p-6 text-white"
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur flex items-center justify-center text-2xl font-bold">
+              AY
             </div>
             <div className="flex-1">
-              <h2>Alex Turner</h2>
-              <p className="text-sm text-muted-foreground">@alexturner</p>
+              <h3 className="font-bold text-lg">Ahmet Yılmaz</h3>
+              <p className="text-sm opacity-90">ahmet@example.com</p>
             </div>
+            <button className="p-2 rounded-lg bg-white/20 backdrop-blur">
+              <ChevronRight className="w-5 h-5" />
+            </button>
           </div>
+        </motion.div>
 
+        {/* Theme Selector */}
+        <div>
+          <h3 className="font-semibold mb-3">Tema</h3>
           <div className="grid grid-cols-3 gap-3">
-            {stats.map((stat, index) => {
-              const Icon = stat.icon;
-              return (
-                <div key={index} className="text-center">
-                  <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-2">
-                    <Icon className="w-5 h-5 text-primary" />
-                  </div>
-                  <p className="text-lg font-bold">{stat.value}</p>
-                  <p className="text-xs text-muted-foreground">{stat.label}</p>
-                </div>
-              );
-            })}
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              onClick={() => handleThemeChange("light")}
+              className={`p-4 rounded-xl border-2 transition-all ${
+                theme === "light"
+                  ? "border-primary bg-primary/10"
+                  : "border-border bg-card"
+              }`}
+            >
+              <Sun
+                className={`w-6 h-6 mx-auto mb-2 ${
+                  theme === "light" ? "text-primary" : "text-muted-foreground"
+                }`}
+              />
+              <p className="text-sm font-medium">Açık</p>
+            </motion.button>
+
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              onClick={() => handleThemeChange("dark")}
+              className={`p-4 rounded-xl border-2 transition-all ${
+                theme === "dark"
+                  ? "border-primary bg-primary/10"
+                  : "border-border bg-card"
+              }`}
+            >
+              <Moon
+                className={`w-6 h-6 mx-auto mb-2 ${
+                  theme === "dark" ? "text-primary" : "text-muted-foreground"
+                }`}
+              />
+              <p className="text-sm font-medium">Koyu</p>
+            </motion.button>
+
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              onClick={() => handleThemeChange("system")}
+              className={`p-4 rounded-xl border-2 transition-all ${
+                theme === "system"
+                  ? "border-primary bg-primary/10"
+                  : "border-border bg-card"
+              }`}
+            >
+              <Monitor
+                className={`w-6 h-6 mx-auto mb-2 ${
+                  theme === "system" ? "text-primary" : "text-muted-foreground"
+                }`}
+              />
+              <p className="text-sm font-medium">Sistem</p>
+            </motion.button>
           </div>
         </div>
 
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-3 px-2">
-            <h3>My Cars</h3>
-            <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors text-sm">
-              <Plus className="w-4 h-4" />
-              <span>Add</span>
-            </button>
-          </div>
-
-          <div className="space-y-3 mb-6">
-            {cars.map((car) => (
-              <div
-                key={car.id}
-                className={`bg-card rounded-2xl p-4 border transition-all cursor-pointer group ${
-                  car.isActive
-                    ? "border-primary/50"
-                    : "border-border hover:border-primary/30"
-                }`}
-              >
-                <div className="flex items-start gap-4">
-                  <div
-                    className={`w-14 h-14 rounded-2xl flex items-center justify-center ${
-                      car.isActive
-                        ? "bg-gradient-to-br from-primary/20 to-purple-600/20"
-                        : "bg-secondary"
-                    }`}
-                  >
-                    <Car
-                      className={`w-7 h-7 ${
-                        car.isActive ? "text-primary" : "text-muted-foreground"
-                      }`}
-                    />
+        {/* Settings Groups */}
+        {settingsGroups.map((group, groupIndex) => (
+          <div key={group.title}>
+            <h3 className="font-semibold mb-3">{group.title}</h3>
+            <div className="bg-card border border-border rounded-xl overflow-hidden">
+              {group.items.map((item, index) => (
+                <motion.button
+                  key={item.label}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: (groupIndex * 0.1) + (index * 0.05) }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={item.action}
+                  className={`w-full flex items-center gap-4 p-4 text-left transition-colors hover:bg-muted/50 ${
+                    index < group.items.length - 1
+                      ? "border-b border-border"
+                      : ""
+                  }`}
+                >
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <item.icon className="w-5 h-5 text-primary" />
                   </div>
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h4 className="text-base">{car.name}</h4>
-                      {car.isActive && (
-                        <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/20 text-primary text-xs">
-                          <Wifi className="w-3 h-3" />
-                          <span>Connected</span>
-                        </div>
-                      )}
-                    </div>
-                    <p className="text-sm text-muted-foreground mb-2">
-                      {car.year} • VIN: {car.vin}
+                    <p className="font-medium">{item.label}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {item.description}
                     </p>
-                    <div className="flex gap-2">
-                      <button className="flex-1 px-3 py-2 rounded-lg bg-secondary hover:bg-muted transition-colors text-xs">
-                        View Details
-                      </button>
-                      <button className="flex-1 px-3 py-2 rounded-lg bg-secondary hover:bg-muted transition-colors text-xs">
-                        Diagnostics
-                      </button>
-                    </div>
                   </div>
-                  <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="bg-gradient-to-br from-amber-500/15 via-orange-500/10 to-amber-500/15 rounded-2xl p-4 border border-amber-500/25 mb-4 shadow-sm">
-          <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500/30 to-orange-500/30 flex items-center justify-center backdrop-blur-sm">
-              <Crown className="w-5 h-5 text-amber-600 dark:text-amber-400" />
-            </div>
-            <div className="flex-1">
-              <h4 className="text-sm font-medium mb-1">Upgrade to Pro</h4>
-              <p className="text-xs text-muted-foreground mb-3">
-                Unlock advanced metrics, custom dashboards, and cloud sync
-              </p>
-              <button className="w-full px-4 py-2 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-medium hover:opacity-90 transition-opacity shadow-md">
-                View Plans
-              </button>
+                  {item.toggle ? (
+                    <div
+                      className={`w-12 h-7 rounded-full transition-colors ${
+                        item.toggleValue ? "bg-primary" : "bg-muted"
+                      }`}
+                    >
+                      <motion.div
+                        className="w-5 h-5 bg-white rounded-full shadow mt-1"
+                        animate={{ x: item.toggleValue ? 28 : 4 }}
+                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                      />
+                    </div>
+                  ) : (
+                    <ChevronRight className="w-5 h-5 text-muted-foreground" />
+                  )}
+                </motion.button>
+              ))}
             </div>
           </div>
-        </div>
+        ))}
 
-        <div className="mb-4">
-          <h3 className="mb-3 px-2">General</h3>
-          <div className="space-y-2">
-            <button
-              onClick={() => {
-                localStorage.removeItem("hasSeenOnboarding");
-                window.location.reload();
-              }}
-              className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-card border border-border hover:bg-secondary transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <User className="w-5 h-5" />
-                <span className="text-sm">View Onboarding</span>
-              </div>
-              <ChevronRight className="w-5 h-5 text-muted-foreground" />
-            </button>
-            <button
-              onClick={() => setShowLogoExport(true)}
-              className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-card border border-border hover:bg-secondary transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <Image className="w-5 h-5" />
-                <span className="text-sm">Export Logo</span>
-              </div>
-              <ChevronRight className="w-5 h-5 text-muted-foreground" />
-            </button>
-            <button className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-card border border-border hover:bg-secondary transition-colors">
-              <div className="flex items-center gap-3">
-                <User className="w-5 h-5" />
-                <span className="text-sm">Account</span>
-              </div>
-              <ChevronRight className="w-5 h-5 text-muted-foreground" />
-            </button>
-            <div className="relative">
-              <button
-                onClick={() => setShowThemeMenu(!showThemeMenu)}
-                className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-card border border-border hover:bg-secondary transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <ThemeIcon className="w-5 h-5" />
-                  <span className="text-sm">Theme</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">{getThemeLabel()}</span>
-                  <ChevronRight className="w-5 h-5 text-muted-foreground" />
-                </div>
-              </button>
-              {showThemeMenu && (
-                <div className="absolute left-0 right-0 mt-2 bg-popover rounded-xl border border-border shadow-2xl overflow-hidden z-50">
-                  <button
-                    onClick={() => handleThemeChange("system")}
-                    className="w-full px-4 py-3 text-left hover:bg-secondary transition-colors flex items-center justify-between"
-                  >
-                    <div className="flex items-center gap-3">
-                      <Monitor className="w-5 h-5" />
-                      <span className="text-sm">Same as system</span>
-                    </div>
-                    {theme === "system" && <Check className="w-5 h-5 text-primary" />}
-                  </button>
-                  <button
-                    onClick={() => handleThemeChange("light")}
-                    className="w-full px-4 py-3 text-left hover:bg-secondary transition-colors flex items-center justify-between"
-                  >
-                    <div className="flex items-center gap-3">
-                      <Sun className="w-5 h-5" />
-                      <span className="text-sm">Light</span>
-                    </div>
-                    {theme === "light" && <Check className="w-5 h-5 text-primary" />}
-                  </button>
-                  <button
-                    onClick={() => handleThemeChange("dark")}
-                    className="w-full px-4 py-3 text-left hover:bg-secondary transition-colors flex items-center justify-between"
-                  >
-                    <div className="flex items-center gap-3">
-                      <Moon className="w-5 h-5" />
-                      <span className="text-sm">Dark</span>
-                    </div>
-                    {theme === "dark" && <Check className="w-5 h-5 text-primary" />}
-                  </button>
-                </div>
-              )}
-            </div>
-            <button className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-card border border-border hover:bg-secondary transition-colors">
-              <div className="flex items-center gap-3">
-                <Bell className="w-5 h-5" />
-                <span className="text-sm">Notifications</span>
-              </div>
-              <ChevronRight className="w-5 h-5 text-muted-foreground" />
-            </button>
-            <button className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-card border border-border hover:bg-secondary transition-colors">
-              <div className="flex items-center gap-3">
-                <Globe className="w-5 h-5" />
-                <span className="text-sm">Language & Region</span>
-              </div>
-              <ChevronRight className="w-5 h-5 text-muted-foreground" />
-            </button>
-            <button className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-card border border-border hover:bg-secondary transition-colors">
-              <div className="flex items-center gap-3">
-                <Shield className="w-5 h-5" />
-                <span className="text-sm">Privacy & Security</span>
-              </div>
-              <ChevronRight className="w-5 h-5 text-muted-foreground" />
-            </button>
-          </div>
-        </div>
-
-        <button
+        {/* Logout Button */}
+        <motion.button
+          whileTap={{ scale: 0.98 }}
           onClick={() => {
             localStorage.removeItem("isLoggedIn");
             window.location.reload();
           }}
-          className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-destructive/10 text-destructive border border-destructive/30 hover:bg-destructive/20 transition-colors"
+          className="w-full bg-danger-red/10 border border-danger-red/20 rounded-xl p-4 text-danger-red font-semibold flex items-center justify-center gap-2 hover:bg-danger-red/20 transition-colors"
         >
           <LogOut className="w-5 h-5" />
-          <span className="text-sm font-medium">Sign Out</span>
-        </button>
+          Çıkış Yap
+        </motion.button>
+
+        {/* App Info */}
+        <div className="text-center text-xs text-muted-foreground space-y-1">
+          <p>OBD2 Arıza Teşhis Uygulaması</p>
+          <p>Versiyon 1.0.0 (Build 2026.05.18)</p>
+          <p className="mt-2">© 2026 Tüm hakları saklıdır</p>
+        </div>
       </div>
     </div>
   );

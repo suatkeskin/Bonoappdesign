@@ -1,4 +1,4 @@
-import { Activity, Circle, History, Home, Settings } from "lucide-react";
+import { Activity, LayoutDashboard, History, ScanSearch, Settings } from "lucide-react";
 
 interface BottomNavProps {
   activeTab: string;
@@ -7,11 +7,11 @@ interface BottomNavProps {
 
 export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
   const tabs = [
-    { id: "timeline", icon: Home, label: "Timeline" },
-    { id: "record", icon: Circle, label: "Record" },
-    { id: "live", icon: Activity, label: "Live" },
-    { id: "history", icon: History, label: "History" },
-    { id: "settings", icon: Settings, label: "Settings" },
+    { id: "dashboard", icon: LayoutDashboard, label: "Ana Sayfa" },
+    { id: "record", icon: ScanSearch, label: "Tarama" },
+    { id: "live", icon: Activity, label: "Canlı" },
+    { id: "history", icon: History, label: "Geçmiş" },
+    { id: "settings", icon: Settings, label: "Ayarlar" },
   ];
 
   return (
